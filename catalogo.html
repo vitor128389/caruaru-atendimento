@@ -1065,8 +1065,8 @@
     lagarto: "https://wa.me/5579999142400"
   };
 
-  function openWhatsModal(productName){
-    var msg = "Olá! Vi o catálogo e tenho interesse no " + productName + ".";
+  function openWhatsModal(productName, customMsg){
+    var msg = customMsg || ("Olá! Vi o catálogo e tenho interesse no " + productName + ".");
     var encoded = encodeURIComponent(msg);
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('waItabaiana').href = WA_LINKS.itabaiana + "?text=" + encoded;
@@ -1089,6 +1089,21 @@
     var el = document.getElementById(id);
     if(el){ el.scrollIntoView({behavior:'smooth', block:'start'}); }
   }
+  // Link de anúncio: catalogo.html?ver=sofas  → já abre a escolha da loja
+  // com a mensagem pronta "Vi um anúncio de sofás e gostaria de ver os modelos".
+  (function(){
+    try{
+      var ver = new URLSearchParams(window.location.search).get('ver');
+      if(!ver) return;
+      var sec = document.getElementById(ver);
+      if(!sec) return;
+      var titulo = (sec.querySelector('.cat-title') || {}).textContent || ver;
+      var nome = titulo.trim().toLowerCase();
+      var msg = "Olá! Vi um anúncio de " + nome + " e gostaria de ver os modelos.";
+      sec.scrollIntoView({behavior:'auto', block:'start'});
+      openWhatsModal(titulo.trim(), msg);
+    }catch(e){}
+  })();
 </script>
 
 </body>
